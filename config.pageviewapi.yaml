@@ -1,0 +1,29 @@
+# RESTBase config
+
+info:
+  name: restbase
+
+templates:
+  analytics-pageview-api-1.0.0: &analytics/pageview/1.0.0
+    info:
+      title: Pageview API
+      version: 1.0.0
+    paths:
+      /{module:projectview}:
+        x-modules:
+          - name: projectview
+            version: 1.0.0
+            type: file
+
+services:
+  - name: restbase
+    module: ./lib/server
+    conf: 
+      port: 7231
+      spec: *spec
+      salt: secret
+      default_page_size: 250
+
+logging:
+  name: restbase
+  level: info
