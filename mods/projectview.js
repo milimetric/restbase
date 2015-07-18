@@ -84,6 +84,24 @@ PJVS.prototype.listProjectview = function(restbase, req, options) {
 };
 
 
+PJVS.prototype.insertProjectview = function(restbase, req) {
+    var rp = req.params;
+
+    return restbase.put({ // Save / update the revision entry
+        uri: self.tableURI(rp.domain),
+        body: {
+            table: self.tableName,
+            attributes: {
+                project: 'en.wikipedia',
+                agent_type: 'spider',
+                day: '2015-05-01',
+                hour: '00:00:00',
+                view_count: '500'
+            }
+        }
+    });
+};
+
 
 module.exports = function(options) {
     var pjvs = new PJVS(options);
@@ -92,12 +110,13 @@ module.exports = function(options) {
         spec: spec,
         operations: {
             listProjectview: pjvs.listProjectview.bind(pjvs),
+            insertProjectview: pjvs.insertProjectview.bind(pjvs),
         },
         resources: [
             {
                 // projectview table
                 uri: '/{domain}/sys/table/' + pjvs.tableName,
-                body: prs.getTableSchema()
+                body: pjvs.getTableSchema()
             }
         ]
     };

@@ -40,8 +40,8 @@ templates:
       - mediaWikiAuth:
         - user:read
     x-subspecs:
-      - mediawiki/v1/content
-      - mediawiki_v1_graphoid
+      #- mediawiki/v1/content
+      #- mediawiki_v1_graphoid
       - test
 
   wmf-sys-1.0.0: &wp/sys/1.0.0
@@ -124,7 +124,7 @@ templates:
       #      type: file
       #      options:
       #        apiURI: http://en.wikipedia.org/w/api.php
-
+#
       #/{module:testservice}:
       #  x-modules:
       #    - name: simple_service

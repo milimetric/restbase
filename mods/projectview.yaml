@@ -1,7 +1,7 @@
 paths:
-  /projectview:
+  /projectview/get:
     get:
-      summary: List projectviews
+      summary: List projectview
       operationId: listProjectview
       parameters:
         - name: day
@@ -24,3 +24,7 @@ paths:
           description: The requested agent_type
           type: string
           required: false
+  /projectview/put:
+    get:
+      summary: Insert projectview
+      operationId: insertProjectview
