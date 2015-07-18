@@ -1,0 +1,26 @@
+paths:
+  /projectview:
+    get:
+      summary: List projectviews
+      operationId: listProjectview
+      parameters:
+        - name: day
+          in: query
+          description: The requested day
+          type: string
+          required: false
+        - name: hour
+          in: query
+          description: The requested hour
+          type: string
+          required: false
+        - name: project
+          in: query
+          description: The requested project
+          type: string
+          required: false
+        - name: agent_type
+          in: query
+          description: The requested agent_type
+          type: string
+          required: false
