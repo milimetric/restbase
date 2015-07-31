@@ -1,17 +1,17 @@
 paths:
-  /projectview/get:
+  /{timeGranularity}:
     get:
-      summary: List projectview
-      operationId: listProjectview
+      summary: get projectview
+      operationId: timeGranularProjectviews
       parameters:
-        - name: day
+        - name: fromDay
           in: query
-          description: The requested day
+          description: The day from which to get data (YYYY-MM-DD format)
           type: string
           required: false
-        - name: hour
+        - name: toDay
           in: query
-          description: The requested hour
+          description: The day to which to get data (YYYY-MM-DD format)
           type: string
           required: false
         - name: project
@@ -24,7 +24,3 @@ paths:
           description: The requested agent_type
           type: string
           required: false
-  /projectview/put:
-    get:
-      summary: Insert projectview
-      operationId: insertProjectview

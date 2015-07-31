@@ -1,5 +1,7 @@
 # RESTBase config
 
+num_workers: 0
+
 info:
   name: restbase
 
@@ -45,7 +47,7 @@ templates:
       - test
 
   wmf-sys-1.0.0: &wp/sys/1.0.0
-    info: 
+    info:
       title: Default MediaWiki sys API module
       version: 1.0.0
     paths:
@@ -136,9 +138,9 @@ templates:
       #            get:
       #              backend_request:
       #                uri: http://en.wikipedia.org/wiki/{+key}
-      #              storage: 
+      #              storage:
       #                no-cache_refresh: true
-      #                bucket_request: 
+      #                bucket_request:
       #                  uri: /{domain}/sys/key_value/testservice.test
       #                item_request:
       #                  uri: /{domain}/sys/key_value/testservice.test/{key}
@@ -171,7 +173,7 @@ spec: &spec
 services:
   - name: restbase
     module: ./lib/server
-    conf: 
+    conf:
       port: 7231
       spec: *spec
       salt: secret

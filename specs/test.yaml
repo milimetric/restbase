@@ -3,16 +3,17 @@
 swagger: 2.0
 
 paths:
-  /{module:projectview}/get/:
+  /{module:projectview}/retrieve:
     get:
       x-backend-request:
-        uri: /{domain}/projectview/get/
+        uri: /{domain}/sys/projectview/retrieve
       x-monitor: false
-  /{module:projectview}/put/:
+  /{module:projectview}/insert:
     get:
       x-backend-request:
-        uri: /{domain}/projectview/put/
+        uri: /{domain}/sys/projectview/insert
       x-monitor: false
+
   #/{module:service}/test/{title}{/revision}:
   #  get:
   #    x-backend-request:

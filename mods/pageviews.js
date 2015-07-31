@@ -25,12 +25,12 @@ function PJVS (options) {
 }
 
 
-PJVS.prototype.tableName = 'pvs_by_project';
+PJVS.prototype.tableName = 'projectviews';
 PJVS.prototype.tableURI = function(domain) {
     return new URI([domain,'sys','table',this.tableName,'']);
 };
 
-// Get the schema for the revision table
+// Get the schema for the projectviews table
 PJVS.prototype.getTableSchema = function () {
     return {
         table: this.tableName,
@@ -40,30 +40,86 @@ PJVS.prototype.getTableSchema = function () {
             day: 'string',
             hour: 'string',
             agent_type: 'string',
-            view_count: 'int',
+            view_count: 'int'
         },
         index: [
             { attribute: 'project', type: 'hash' },
             { attribute: 'day', type: 'range', order: 'asc' },
             { attribute: 'hour', type: 'range', order: 'asc' },
             { attribute: 'agent_type', type: 'hash' }
-        ],
+        ]
     };
 };
 
 
-// /projectview
-PJVS.prototype.listProjectview = function(restbase, req, options) {
-    var rp = req.params;
-    var revisionRequest;
 
-    revisionRequest = restbase.get({
+
+PJVS.prototype.timeGranularProjectviews = function(restbase, req) {
+    var rp = req.params;
+    var projectviewRequest;
+
+    var hourValue
+
+    if (rp.timeGranularity == "hourly") {
+
+
+
+    } else if (rp.timeGranularity == "daily") {
+
+
+    } else {
+        throw new rbUtil.HTTPError({
+            status: 400,
+            body: {
+                type: 'invalidTimeGranularity',
+                description: 'Invalid time granularity specified, should be hourly or daily.'
+            }
+        });
+    }
+
+
+
+    projectviewRequest = restbase.get({
+        uri: this.tableURI(rp.domain),
+        body: {
+            table: this.tableName,
+            attributes: {
+                project: 'en.wikipedia',
+                agent_type: 'spider',
+            }
+        }
+    })
+        .catch(function(e) {
+            if (e.status !== 404) {
+                throw e;
+            }
+        });
+    return projectviewRequest
+        .then(function(res) {
+
+            if (!res.headers) {
+                res.headers = {};
+            }
+
+            return res;
+        });
+};
+
+
+
+
+/*// /projectview
+PJVS.prototype.listProjectview = function(restbase, req) {
+    var rp = req.params;
+    var projectviewRequest;
+
+    projectviewRequest = restbase.get({
             uri: this.tableURI(rp.domain),
             body: {
                 table: this.tableName,
                 attributes: {
                     project: 'en.wikipedia',
-                    agent_type: 'user'
+                    agent_type: 'spider',
                 }
             }
         })
@@ -72,7 +128,7 @@ PJVS.prototype.listProjectview = function(restbase, req, options) {
                 throw e;
             }
         });
-    return revisionRequest
+    return projectviewRequest
     .then(function(res) {
 
         if (!res.headers) {
@@ -87,10 +143,10 @@ PJVS.prototype.listProjectview = function(restbase, req, options) {
 PJVS.prototype.insertProjectview = function(restbase, req) {
     var rp = req.params;
 
-    return restbase.put({ // Save / update the revision entry
-        uri: self.tableURI(rp.domain),
+    return restbase.put({ // Save / update the projectview entry
+        uri: this.tableURI(rp.domain),
         body: {
-            table: self.tableName,
+            table: this.tableName,
             attributes: {
                 project: 'en.wikipedia',
                 agent_type: 'spider',
@@ -99,8 +155,11 @@ PJVS.prototype.insertProjectview = function(restbase, req) {
                 view_count: '500'
             }
         }
+    }).then(function() {
+        return this.listProjectview(restbase, req);
     });
-};
+;
+};*/
 
 
 module.exports = function(options) {
@@ -109,8 +168,7 @@ module.exports = function(options) {
     return {
         spec: spec,
         operations: {
-            listProjectview: pjvs.listProjectview.bind(pjvs),
-            insertProjectview: pjvs.insertProjectview.bind(pjvs),
+            timeGranularProjectviews: pjvs.timeGranularProjectviews.bind(pjvs)
         },
         resources: [
             {
