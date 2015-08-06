@@ -9,9 +9,9 @@ templates:
       title: Pageview API
       version: 1.0.0
     paths:
-      /{module:projectview}:
+      /{module:pageviews}:
         x-modules:
-          - name: projectview
+          - name: pageviews
             version: 1.0.0
             type: file
 

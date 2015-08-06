@@ -1,165 +1,142 @@
-"use strict";
+'use strict';
 
 /**
- * Projectview API module
+ * Pageviews API module
  *
  * Main tasks:
  * - TBD
  */
 
 
-var rbUtil = require('../lib/rbUtil.js');
 var URI = require('swagger-router').URI;
-var uuid = require('cassandra-uuid').TimeUuid;
 
 // TODO: move to module
 var fs = require('fs');
 var yaml = require('js-yaml');
-var spec = yaml.safeLoad(fs.readFileSync(__dirname + '/projectview.yaml'));
+var path = require('path');
+var spec = yaml.safeLoad(fs.readFileSync(path.join(__dirname, '/pageviews.yaml')));
 
 
-// Projectview Service
+// Pageviews Service
 function PJVS (options) {
     this.options = options;
     this.log = options.log || function(){};
 }
 
 
-PJVS.prototype.tableName = 'projectviews';
+PJVS.prototype.tableName = 'pageviews';
 PJVS.prototype.tableURI = function(domain) {
-    return new URI([domain,'sys','table',this.tableName,'']);
+    return new URI([domain, 'sys', 'table', this.tableName, '']);
 };
 
-// Get the schema for the projectviews table
+
+// Get the schema for the pageviews table
 PJVS.prototype.getTableSchema = function () {
     return {
         table: this.tableName,
         version: 1,
         attributes: {
-            project: 'string',
-            day: 'string',
-            hour: 'string',
-            agent_type: 'string',
-            view_count: 'int'
+            project     : 'string',
+            article     : 'string',
+            agent       : 'string',
+            granularity : 'string',
+            // the hourly timestamp will be stored as YYYYMMDDHH
+            timestamp   : 'string',
+            views: 'int'
         },
         index: [
             { attribute: 'project', type: 'hash' },
-            { attribute: 'day', type: 'range', order: 'asc' },
-            { attribute: 'hour', type: 'range', order: 'asc' },
-            { attribute: 'agent_type', type: 'hash' }
+            { attribute: 'article', type: 'hash' },
+            { attribute: 'agent', type: 'hash' },
+            { attribute: 'granularity', type: 'hash' },
+            { attribute: 'timestamp', type: 'range', order: 'asc' },
         ]
     };
 };
 
 
+PJVS.prototype.pageviewsForArticle = function (restbase, req) {
+    var rp = req.params,
+        dataRequest;
 
-
-PJVS.prototype.timeGranularProjectviews = function(restbase, req) {
-    var rp = req.params;
-    var projectviewRequest;
-
-    var hourValue
-
-    if (rp.timeGranularity == "hourly") {
-
-
-
-    } else if (rp.timeGranularity == "daily") {
-
-
-    } else {
-        throw new rbUtil.HTTPError({
-            status: 400,
-            body: {
-                type: 'invalidTimeGranularity',
-                description: 'Invalid time granularity specified, should be hourly or daily.'
-            }
-        });
-    }
-
-
-
-    projectviewRequest = restbase.get({
+    dataRequest = restbase.get({
         uri: this.tableURI(rp.domain),
         body: {
             table: this.tableName,
             attributes: {
-                project: 'en.wikipedia',
-                agent_type: 'spider',
+                project: rp.project,
+                agent: rp.agent,
+                article: rp.article,
+                granularity: rp.granularity,
+                timestamp: { between: [rp.start, rp.end] },
             }
         }
-    })
-        .catch(function(e) {
-            if (e.status !== 404) {
-                throw e;
-            }
-        });
-    return projectviewRequest
-        .then(function(res) {
 
-            if (!res.headers) {
-                res.headers = {};
-            }
+    }).catch(function (e) {
+        if (e.status !== 404) {
+            throw e;
+        }
+    });
 
-            return res;
-        });
-};
-
-
-
-
-/*// /projectview
-PJVS.prototype.listProjectview = function(restbase, req) {
-    var rp = req.params;
-    var projectviewRequest;
-
-    projectviewRequest = restbase.get({
-            uri: this.tableURI(rp.domain),
-            body: {
-                table: this.tableName,
-                attributes: {
-                    project: 'en.wikipedia',
-                    agent_type: 'spider',
-                }
-            }
-        })
-        .catch(function(e) {
-            if (e.status !== 404) {
-                throw e;
-            }
-        });
-    return projectviewRequest
-    .then(function(res) {
-
-        if (!res.headers) {
-            res.headers = {};
+    return dataRequest.then(function (res) {
+        if (!res) {
+            // this could mean there was a 404 error above, which could mean the query found no data
+            return {};
         }
 
+        res.headers = res.headers || {};
         return res;
     });
 };
 
 
-PJVS.prototype.insertProjectview = function(restbase, req) {
-    var rp = req.params;
+/* Is this needed for more than just test data? */
+var moment = require('moment');
+PJVS.prototype.insertPageviewsForArticleTestData = function(restbase, req) {
+    var rp = req.params,
+        self = this,
+        start = moment('2015-07-01'),
+        end = moment('2015-08-01'),
+        lastPromise,
+        dateIterator;
 
-    return restbase.put({ // Save / update the projectview entry
-        uri: this.tableURI(rp.domain),
-        body: {
-            table: this.tableName,
-            attributes: {
-                project: 'en.wikipedia',
-                agent_type: 'spider',
-                day: '2015-05-01',
-                hour: '00:00:00',
-                view_count: '500'
+    ['one', 'two', 'three', 'four', 'five'].forEach(function (article) {
+        for (dateIterator = start; dateIterator.isBefore(end); dateIterator.add('hours', 1)) {
+
+            var attributes = {
+                    project: 'en.wikipedia',
+                    article: article,
+                    granularity: 'hourly',
+                    agent: (Math.floor(Math.random() * 10)) % 3 === 0 ? 'spider' : 'user',
+                    timestamp: dateIterator.format('YYYYMMDDHH'),
+                    views: 500
+                };
+
+            lastPromise = restbase.put({ // Save / update the pageviews entry
+                uri: self.tableURI(rp.domain),
+                body: {
+                    table: self.tableName,
+                    attributes: attributes,
+                }
+            });
+
+            if (dateIterator.get('hours') === 0) {
+                attributes.granularity = 'daily';
+                attributes.views = 12000;
+
+                lastPromise = restbase.put({ // Save / update the pageviews entry
+                    uri: self.tableURI(rp.domain),
+                    body: {
+                        table: self.tableName,
+                        attributes: attributes,
+                    }
+                });
             }
         }
-    }).then(function() {
-        return this.listProjectview(restbase, req);
     });
-;
-};*/
+
+    return lastPromise;
+};
 
 
 module.exports = function(options) {
@@ -168,11 +145,12 @@ module.exports = function(options) {
     return {
         spec: spec,
         operations: {
-            timeGranularProjectviews: pjvs.timeGranularProjectviews.bind(pjvs)
+            pageviewsForArticle: pjvs.pageviewsForArticle.bind(pjvs),
+            insertPageviewsForArticleTestData: pjvs.insertPageviewsForArticleTestData.bind(pjvs),
         },
         resources: [
             {
-                // projectview table
+                // pageviews table
                 uri: '/{domain}/sys/table/' + pjvs.tableName,
                 body: pjvs.getTableSchema()
             }

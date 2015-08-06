@@ -74,13 +74,13 @@ paths:
         '200':
           description: The list of values with (day, hour, project, agent_type, view_count) fields.
           schema:
-            $ref: '#/definitions/projectviews'
+            $ref: '#/definitions/pageviews'
         default:
           description: Error
           schema:
             $ref: '#/definitions/problem'
       x-backend-request:
-        uri: /{domain}/sys/projectview/{timeGranularity}/
+        uri: /{domain}/sys/pageviews/{timeGranularity}/
       x-monitor: false
 
 #  /{module:page}/title/{title}:

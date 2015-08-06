@@ -1,26 +1,10 @@
 paths:
-  /{timeGranularity}:
-    get:
-      summary: get projectview
-      operationId: timeGranularProjectviews
-      parameters:
-        - name: fromDay
-          in: query
-          description: The day from which to get data (YYYY-MM-DD format)
-          type: string
-          required: false
-        - name: toDay
-          in: query
-          description: The day to which to get data (YYYY-MM-DD format)
-          type: string
-          required: false
-        - name: project
-          in: query
-          description: The requested project
-          type: string
-          required: false
-        - name: agent_type
-          in: query
-          description: The requested agent_type
-          type: string
-          required: false
+    /stats/{project}/{agent}/{article}/{granularity}/{start}/{end}:
+        get:
+          summary: query pageviews per article
+          operationId: pageviewsForArticle
+
+    /insert:
+        get:
+          summary: insert pageviews test data
+          operationId: insertPageviewsForArticleTestData

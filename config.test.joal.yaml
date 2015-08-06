@@ -74,82 +74,11 @@ templates:
                   - name: default.group.local
                     domains: /./
 
-      /{module:projectview}:
+      /{module:pageviews}:
         x-modules:
-            - name: projectview
+            - name: pageviews
               version: 1.0.0
               type: file
-
-      #/{module:page_revisions}:
-      #  x-modules:
-      #      - name: page_revisions
-      #        version: 1.0.0
-      #        type: file
-#
-      #/{module:key_value}:
-      #  x-modules:
-      #    - name: key_value
-      #      version: 1.0.0
-      #      type: file
-#
-      #/{module:key_rev_value}:
-      #  x-modules:
-      #    - name: key_rev_value
-      #      version: 1.0.0
-      #      type: file
-#
-      #/{module:parsoid}:
-      #  x-modules:
-      #    - name: parsoid
-      #      version: 1.0.0
-      #      type: file
-      #      options:
-      #        parsoidHost: http://parsoid-lb.eqiad.wikimedia.org
-      #        # For local testing, use:
-      #        # parsoidHost: http://localhost:8000
-#
-      #/{module:graphoid}:
-      #  x-modules:
-      #    - name: simple_service
-      #      version: 1.0.0
-      #      type: file
-      #      options:
-      #        paths:
-      #          /v1/png/{title}/{revision}/{graph_id}:
-      #            get:
-      #              backend_request:
-      #                uri: http://graphoid.wikimedia.org/en.wikipedia.org/v1/png/{title}/{revision}/{graph_id}
-#
-      #/{module:action}:
-      #  x-modules:
-      #    - name: action
-      #      type: file
-      #      options:
-      #        apiURI: http://en.wikipedia.org/w/api.php
-#
-      #/{module:testservice}:
-      #  x-modules:
-      #    - name: simple_service
-      #      version: 1.0.0
-      #      type: file
-      #      options:
-      #        paths:
-      #          /test/{key}:
-      #            get:
-      #              backend_request:
-      #                uri: http://en.wikipedia.org/wiki/{+key}
-      #              storage:
-      #                no-cache_refresh: true
-      #                bucket_request:
-      #                  uri: /{domain}/sys/key_value/testservice.test
-      #                item_request:
-      #                  uri: /{domain}/sys/key_value/testservice.test/{key}
-
-
-      #/{module:page_save}:
-      #  x-modules:
-      #    - name: page_save
-      #      type: file
 
   wp-default-1.0.0: &wp/default/1.0.0
     x-subspecs:
