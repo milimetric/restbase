@@ -3,13 +3,34 @@
 swagger: 2.0
 
 paths:
-  /{module:pageviews}/stats/{project}/{agent}/{article}/{granularity}/{start}/{end}:
-    get:
-      x-backend-request:
-        uri: /{domain}/sys/pageviews/stats/{project}/{agent}/{article}/{granularity}/{start}/{end}
-      x-monitor: false
-  /{module:pageviews}/insert:
-    get:
-      x-backend-request:
-        uri: /{domain}/sys/pageviews/insert
-      x-monitor: false
+    /{module:pageviews}/per-article/{project}/{agent}/{article}/{granularity}/{start}/{end}:
+        get:
+            x-backend-request:
+                uri: /{domain}/sys/pageviews/per-article/{project}/{agent}/{article}/{granularity}/{start}/{end}
+            x-monitor: false
+    /{module:pageviews}/per-project/{project}/{agent}/{granularity}/{start}/{end}:
+        get:
+            x-backend-request:
+                uri: /{domain}/sys/pageviews/per-project/{project}/{agent}/{granularity}/{start}/{end}
+            x-monitor: false
+    /{module:pageviews}/top/{project}/{timespan}:
+        get:
+            x-backend-request:
+                uri: /{domain}/sys/pageviews/top/{project}/{timespan}
+            x-monitor: false
+
+    /{module:pageviews}/insert-per-article:
+        get:
+            x-backend-request:
+                uri: /{domain}/sys/pageviews/insert-per-article
+            x-monitor: false
+    /{module:pageviews}/insert-per-project:
+        get:
+            x-backend-request:
+                uri: /{domain}/sys/pageviews/insert-per-project
+            x-monitor: false
+    /{module:pageviews}/insert-top:
+        get:
+            x-backend-request:
+                uri: /{domain}/sys/pageviews/insert-top
+            x-monitor: false
