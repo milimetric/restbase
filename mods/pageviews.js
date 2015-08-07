@@ -94,12 +94,11 @@ var queryCatcher = function (e) {
         }
     },
     queryResponser = function (res) {
-        if (!res) {
-            // this could mean there was a 404 error above, which could mean the query found no data
-            return {};
-        }
-
+        // always return at least an empty array so that queries for non-existing data don't error
+        res = res || {};
+        res.body = res.body || {items:[]};
         res.headers = res.headers || {};
+        res.status = res.status || 200;
         return res;
     };
 
@@ -151,7 +150,6 @@ PJVS.prototype.pageviewsForTops = function (restbase, req) {
     var rp = req.params,
         dataRequest;
 
-    console.log(rp);
     dataRequest = restbase.get({
         uri: tableURI(rp.domain, tables.tops),
         body: {
@@ -168,7 +166,9 @@ PJVS.prototype.pageviewsForTops = function (restbase, req) {
 };
 
 
-/* NOTE: Is this needed for more than just test data? */
+/* The following three functions are just for testing, uncomment them and their endpoints
+ * if you want to play around with fake data
+
 var moment = require('moment');
 PJVS.prototype.insertPageviewsForArticleTestData = function(restbase, req) {
     var rp = req.params,
@@ -288,6 +288,7 @@ PJVS.prototype.insertPageviewsForTopsTestData = function(restbase, req) {
 
     return lastPromise;
 };
+*/
 
 
 module.exports = function(options) {
@@ -300,9 +301,10 @@ module.exports = function(options) {
             pageviewsForProjects: pjvs.pageviewsForProjects.bind(pjvs),
             pageviewsForTops: pjvs.pageviewsForTops.bind(pjvs),
 
-            insertPageviewsForArticleTestData: pjvs.insertPageviewsForArticleTestData.bind(pjvs),
-            insertPageviewsForProjectTestData: pjvs.insertPageviewsForProjectTestData.bind(pjvs),
-            insertPageviewsForTopsTestData: pjvs.insertPageviewsForTopsTestData.bind(pjvs),
+            // These operations just insert fake data, uncomment them above to play
+            //insertPageviewsForArticleTestData: pjvs.insertPageviewsForArticleTestData.bind(pjvs),
+            //insertPageviewsForProjectTestData: pjvs.insertPageviewsForProjectTestData.bind(pjvs),
+            //insertPageviewsForTopsTestData: pjvs.insertPageviewsForTopsTestData.bind(pjvs),
         },
         resources: [
             {

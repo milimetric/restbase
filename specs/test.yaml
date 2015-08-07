@@ -3,34 +3,109 @@
 swagger: 2.0
 
 paths:
-    /{module:pageviews}/per-article/{project}/{agent}/{article}/{granularity}/{start}/{end}:
+  /{module:service}/test/{title}{/revision}:
+    get:
+      x-backend-request:
+        uri: /{domain}/sys/testservice/test/{title}{/revision}
+        headers:
+          cache-control: '{cache-control}'
+      x-monitor: false
+
+  /{module:page}/wikitext/{title}:
+    post:
+      tags:
+        - Page content
+      description: >
+        Save a new revision of a page
+
+        For new pages, the `revision` parameter should be left empty.
+        For editing existing pages, it should contain the revision ID
+        the edit is derived from.
+
+        Stability: [unstable](https://www.mediawiki.org/wiki/API_versioning#Unstable)
+      parameters:
+        - name: title
+          in: path
+          description: The page title.
+          type: string
+          required: true
+        - name: revision
+          in: formData
+          description: The revision of the page the edit is based on.
+          type: string
+          required: false
+        - name: wikitext
+          in: formData
+          description: The wikitext source of the page to save
+          type: string
+          required: true
+        - name: token
+          in: formData
+          description: The CRSF edit token provided by the MW API
+          type: string
+          required: true
+        - name: comment
+          in: formData
+          description: The summary of the change
+          type: string
+          required: false
+        - name: minor
+          in: formData
+          description: Whether this represents a minor change
+          type: boolean
+          required: false
+        - name: bot
+          in: formData
+          description: Whether the change is being made by a bot
+          type: boolean
+          required: false
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: The existing revision of the page matches the sent text
+        '201':
+          description: A new revision of the page has been created
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/problem'
+      x-backend-request:
+        uri: /{domain}/sys/page_save/wikitext/{title}
+        body: '{$.request.body}'
+      x-monitor: false
+
+  /{module:pageviews}/per-article/{project}/{agent}/{article}/{granularity}/{start}/{end}:
         get:
             x-backend-request:
                 uri: /{domain}/sys/pageviews/per-article/{project}/{agent}/{article}/{granularity}/{start}/{end}
             x-monitor: false
-    /{module:pageviews}/per-project/{project}/{agent}/{granularity}/{start}/{end}:
-        get:
-            x-backend-request:
-                uri: /{domain}/sys/pageviews/per-project/{project}/{agent}/{granularity}/{start}/{end}
-            x-monitor: false
-    /{module:pageviews}/top/{project}/{timespan}:
-        get:
-            x-backend-request:
-                uri: /{domain}/sys/pageviews/top/{project}/{timespan}
-            x-monitor: false
+  /{module:pageviews}/per-project/{project}/{agent}/{granularity}/{start}/{end}:
+    get:
+      x-backend-request:
+        uri: /{domain}/sys/pageviews/per-project/{project}/{agent}/{granularity}/{start}/{end}
+      x-monitor: false
+  /{module:pageviews}/top/{project}/{timespan}:
+    get:
+      x-backend-request:
+        uri: /{domain}/sys/pageviews/top/{project}/{timespan}
+      x-monitor: false
 
-    /{module:pageviews}/insert-per-article:
-        get:
-            x-backend-request:
-                uri: /{domain}/sys/pageviews/insert-per-article
-            x-monitor: false
-    /{module:pageviews}/insert-per-project:
-        get:
-            x-backend-request:
-                uri: /{domain}/sys/pageviews/insert-per-project
-            x-monitor: false
-    /{module:pageviews}/insert-top:
-        get:
-            x-backend-request:
-                uri: /{domain}/sys/pageviews/insert-top
-            x-monitor: false
+  # These three endpoints are just for fake data:
+  #/{module:pageviews}/insert-per-article:
+    #get:
+      #x-backend-request:
+        #uri: /{domain}/sys/pageviews/insert-per-article
+      #x-monitor: false
+  #/{module:pageviews}/insert-per-project:
+    #get:
+      #x-backend-request:
+        #uri: /{domain}/sys/pageviews/insert-per-project
+      #x-monitor: false
+  #/{module:pageviews}/insert-top:
+    #get:
+      #x-backend-request:
+        #uri: /{domain}/sys/pageviews/insert-top
+      #x-monitor: false

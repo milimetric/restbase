@@ -143,6 +143,12 @@ templates:
           - name: page_save
             type: file
 
+      /{module:pageviews}:
+        x-modules:
+            - name: pageviews
+              version: 1.0.0
+              type: file
+
   wp-default-1.0.0: &wp/default/1.0.0
     x-subspecs:
       - paths:

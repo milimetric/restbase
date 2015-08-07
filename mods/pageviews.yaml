@@ -12,15 +12,16 @@ paths:
           summary: query top pageviews
           operationId: pageviewsForTops
 
-    /insert-per-article:
-        get:
-          summary: insert pageviews test data for per article queries
-          operationId: insertPageviewsForArticleTestData
-    /insert-per-project:
-        get:
-          summary: insert pageviews test data for per project queries
-          operationId: insertPageviewsForProjectTestData
-    /insert-top:
-        get:
-          summary: insert pageviews test data for tops queries
-          operationId: insertPageviewsForTopsTestData
+    # These three endpoints are just for fake data:
+    #/insert-per-article:
+        #get:
+          #summary: insert pageviews test data for per article queries
+          #operationId: insertPageviewsForArticleTestData
+    #/insert-per-project:
+        #get:
+          #summary: insert pageviews test data for per project queries
+          #operationId: insertPageviewsForProjectTestData
+    #/insert-top:
+        #get:
+          #summary: insert pageviews test data for tops queries
+          #operationId: insertPageviewsForTopsTestData
