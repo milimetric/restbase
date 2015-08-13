@@ -166,49 +166,24 @@ PJVS.prototype.pageviewsForTops = function (restbase, req) {
 };
 
 
-/* The following three functions are just for testing, uncomment them and their endpoints
- * if you want to play around with fake data
+// The following three functions are just for testing
 
-var moment = require('moment');
 PJVS.prototype.insertPageviewsForArticleTestData = function(restbase, req) {
     var rp = req.params,
-        start = moment('2014-07-01'),
-        end = moment('2015-08-01'),
-        lastPromise,
-        dateIterator;
+        lastPromise;
 
-    ['one', 'two', 'three', 'four', 'five'].forEach(function (article) {
-        for (dateIterator = start; dateIterator.isBefore(end); dateIterator.add('hours', 1)) {
-
-            var attributes = {
-                    project: 'en.wikipedia',
-                    article: article,
-                    granularity: 'hourly',
-                    agent: (Math.floor(Math.random() * 10)) % 3 === 0 ? 'spider' : 'user',
-                    timestamp: dateIterator.format('YYYYMMDDHH'),
-                    views: 500
-                };
-
-            lastPromise = restbase.put({ // Save / update the pageviews entry
-                uri: tableURI(rp.domain, tables.article),
-                body: {
-                    table: tables.article,
-                    attributes: attributes,
-                }
-            });
-
-            if (dateIterator.get('hours') === 0) {
-                attributes.granularity = 'daily';
-                attributes.views = 12000;
-
-                lastPromise = restbase.put({ // Save / update the pageviews entry
-                    uri: tableURI(rp.domain, tables.article),
-                    body: {
-                        table: tables.article,
-                        attributes: attributes,
-                    }
-                });
-            }
+    lastPromise = restbase.put({ // Save / update the pageviews entry
+        uri: tableURI(rp.domain, tables.article),
+        body: {
+            table: tables.article,
+            attributes: {
+                project: rp.project,
+                article: rp.article,
+                granularity: rp.granularity,
+                agent: rp.agent,
+                timestamp: rp.timestamp,
+                views: rp.views,
+            },
         }
     });
 
@@ -218,42 +193,19 @@ PJVS.prototype.insertPageviewsForArticleTestData = function(restbase, req) {
 
 PJVS.prototype.insertPageviewsForProjectTestData = function(restbase, req) {
     var rp = req.params,
-        start = moment('2014-07-01'),
-        end = moment('2015-08-01'),
-        lastPromise,
-        dateIterator;
+        lastPromise;
 
-    ['en.wikipedia', 'es.wikipedia', 'ro.wikipedia', 'fr.wikipedia', 'all'].forEach(function (project) {
-        for (dateIterator = start; dateIterator.isBefore(end); dateIterator.add('hours', 1)) {
-
-            var attributes = {
-                    project: project,
-                    granularity: 'hourly',
-                    agent: (Math.floor(Math.random() * 10)) % 3 === 0 ? 'spider' : 'user',
-                    timestamp: dateIterator.format('YYYYMMDDHH'),
-                    views: project === 'all' ? 50000 : 200000
-                };
-
-            lastPromise = restbase.put({ // Save / update the pageviews entry
-                uri: tableURI(rp.domain, tables.project),
-                body: {
-                    table: tables.project,
-                    attributes: attributes,
-                }
-            });
-
-            if (dateIterator.get('hours') === 0) {
-                attributes.granularity = 'daily';
-                attributes.views = project === 'all' ? 1200000 : 4800000;
-
-                lastPromise = restbase.put({ // Save / update the pageviews entry
-                    uri: tableURI(rp.domain, tables.project),
-                    body: {
-                        table: tables.project,
-                        attributes: attributes,
-                    }
-                });
-            }
+    lastPromise = restbase.put({ // Save / update the pageviews entry
+        uri: tableURI(rp.domain, tables.project),
+        body: {
+            table: tables.project,
+            attributes: {
+                project: rp.project,
+                granularity: rp.granularity,
+                agent: rp.agent,
+                timestamp: rp.timestamp,
+                views: rp.views,
+            },
         }
     });
 
@@ -261,34 +213,27 @@ PJVS.prototype.insertPageviewsForProjectTestData = function(restbase, req) {
 };
 
 
+
 PJVS.prototype.insertPageviewsForTopsTestData = function(restbase, req) {
     var rp = req.params,
         lastPromise;
 
-    ['en.wikipedia', 'es.wikipedia', 'ro.wikipedia', 'fr.wikipedia', 'all'].forEach(function (project) {
-        ['year', 'month', 'day'].forEach(function (timespan) {
-
-            lastPromise = restbase.put({ // Save / update the pageviews entry
-                uri: tableURI(rp.domain, tables.tops),
-                body: {
-                    table: tables.tops,
-                    attributes: {
-                        project: project,
-                        timespan: timespan,
-                        articles: JSON.stringify([
-                            {rank: 1, article: 'one ' + timespan, views: 125},
-                            {rank: 2, article: 'two ' + timespan, views: 114},
-                            {rank: 3, article: 'thr ' + timespan, views: 103},
-                        ]),
-                    },
-                }
-            });
-        });
+    lastPromise = restbase.put({ // Save / update the pageviews entry
+        uri: tableURI(rp.domain, tables.tops),
+        body: {
+            table: tables.tops,
+            attributes: {
+                project: rp.project,
+                timespan: rp.timespan,
+                articles: JSON.stringify([
+                    {rank: rp.rank, article: rp.article + rp.timespan, views: rp.views},
+                ]),
+            },
+        }
     });
 
     return lastPromise;
 };
-*/
 
 
 module.exports = function(options) {
@@ -302,9 +247,9 @@ module.exports = function(options) {
             pageviewsForTops: pjvs.pageviewsForTops.bind(pjvs),
 
             // These operations just insert fake data, uncomment them above to play
-            //insertPageviewsForArticleTestData: pjvs.insertPageviewsForArticleTestData.bind(pjvs),
-            //insertPageviewsForProjectTestData: pjvs.insertPageviewsForProjectTestData.bind(pjvs),
-            //insertPageviewsForTopsTestData: pjvs.insertPageviewsForTopsTestData.bind(pjvs),
+            insertPageviewsForArticleTestData: pjvs.insertPageviewsForArticleTestData.bind(pjvs),
+            insertPageviewsForProjectTestData: pjvs.insertPageviewsForProjectTestData.bind(pjvs),
+            insertPageviewsForTopsTestData: pjvs.insertPageviewsForTopsTestData.bind(pjvs),
         },
         resources: [
             {

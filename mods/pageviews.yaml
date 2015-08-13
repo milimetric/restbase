@@ -13,15 +13,15 @@ paths:
           operationId: pageviewsForTops
 
     # These three endpoints are just for fake data:
-    #/insert-per-article:
-        #get:
-          #summary: insert pageviews test data for per article queries
-          #operationId: insertPageviewsForArticleTestData
-    #/insert-per-project:
-        #get:
-          #summary: insert pageviews test data for per project queries
-          #operationId: insertPageviewsForProjectTestData
-    #/insert-top:
-        #get:
-          #summary: insert pageviews test data for tops queries
-          #operationId: insertPageviewsForTopsTestData
+    /insert-per-article/{project}/{agent}/{article}/{granularity}/{timestamp}/{views}:
+        get:
+          summary: insert pageviews test data for per article queries
+          operationId: insertPageviewsForArticleTestData
+    /insert-per-project/{project}/{agent}/{granularity}/{timestamp}/{views}:
+        get:
+          summary: insert pageviews test data for per project queries
+          operationId: insertPageviewsForProjectTestData
+    /insert-top/{project}/{timespan}/{rank}/{article}/{views}:
+        get:
+          summary: insert pageviews test data for tops queries
+          operationId: insertPageviewsForTopsTestData

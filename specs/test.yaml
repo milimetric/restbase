@@ -94,18 +94,18 @@ paths:
       x-monitor: false
 
   # These three endpoints are just for fake data:
-  #/{module:pageviews}/insert-per-article:
-    #get:
-      #x-backend-request:
-        #uri: /{domain}/sys/pageviews/insert-per-article
-      #x-monitor: false
-  #/{module:pageviews}/insert-per-project:
-    #get:
-      #x-backend-request:
-        #uri: /{domain}/sys/pageviews/insert-per-project
-      #x-monitor: false
-  #/{module:pageviews}/insert-top:
-    #get:
-      #x-backend-request:
-        #uri: /{domain}/sys/pageviews/insert-top
-      #x-monitor: false
+  /{module:pageviews}/insert-per-article/{project}/{agent}/{article}/{granularity}/{timestamp}/{views}:
+    get:
+      x-backend-request:
+        uri: /{domain}/sys/pageviews/insert-per-article/{project}/{agent}/{article}/{granularity}/{timestamp}/{views}
+      x-monitor: false
+  /{module:pageviews}/insert-per-project/{project}/{agent}/{granularity}/{timestamp}/{views}:
+    get:
+      x-backend-request:
+        uri: /{domain}/sys/pageviews/insert-per-project/{project}/{agent}/{granularity}/{timestamp}/{views}
+      x-monitor: false
+  /{module:pageviews}/insert-top/{project}/{timespan}/{rank}/{article}/{views}:
+    get:
+      x-backend-request:
+        uri: /{domain}/sys/pageviews/insert-top/{project}/{timespan}/{rank}/{article}/{views}
+      x-monitor: false
