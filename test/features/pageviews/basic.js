@@ -19,9 +19,9 @@ describe('pageviews endpoints', function () {
     var topsEndpoint = '/pageviews/top/en.wikipedia/month';
 
     // Fake data insertion endpoints
-    var insertArticleEndpoint = '/pageviews/insert-per-article/en.wikipedia/spider/one/daily/2015070200/100';
-    var insertProjectEndpoint = '/pageviews/insert-per-project/en.wikipedia/spider/hourly/2015070101/10';
-    var insertTopsEndpoint = '/pageviews/insert-top/en.wikipedia/month/1/one/2000';
+    var insertArticleEndpoint = '/pageviews/insert-per-article/en.wikipedia/spider/one/daily/2015070200';
+    var insertProjectEndpoint = '/pageviews/insert-per-project/en.wikipedia/spider/hourly/2015070101';
+    var insertTopsEndpoint = '/pageviews/insert-top/en.wikipedia/month/1/one';
 
     // Test Article Endpoint
 
@@ -35,13 +35,14 @@ describe('pageviews endpoints', function () {
 
     it('should return the expected per article data after insertion', function () {
         return preq.get({
-            uri: server.config.baseURL + insertArticleEndpoint
+            uri: server.config.baseURL + insertArticleEndpoint + '/100'
         }).then(function (res){
             return preq.get({
                 uri: server.config.baseURL + articleEndpoint
             })
         }).then(function (res) {
             assert.deepEqual(res.body.items.length, 1);
+            assert.deepEqual(res.body.items[0].views, 100);
         });
     });
 
@@ -58,13 +59,14 @@ describe('pageviews endpoints', function () {
 
     it('should return the expected per project data after insertion', function () {
         return preq.get({
-            uri: server.config.baseURL + insertProjectEndpoint
+            uri: server.config.baseURL + insertProjectEndpoint + '/1000'
         }).then(function (res){
             return preq.get({
                 uri: server.config.baseURL + projectEndpoint
             })
         }).then(function (res) {
             assert.deepEqual(res.body.items.length, 1);
+            assert.deepEqual(res.body.items[0].views, 1000);
         });
     });
 
@@ -81,13 +83,15 @@ describe('pageviews endpoints', function () {
 
     it('should return the expected tops data after insertion', function () {
         return preq.get({
-            uri: server.config.baseURL + insertTopsEndpoint
+            uri: server.config.baseURL + insertTopsEndpoint + '/2000'
         }).then(function (res){
             return preq.get({
                 uri: server.config.baseURL + topsEndpoint
             })
         }).then(function (res) {
             assert.deepEqual(res.body.items.length, 1);
+            var article = JSON.parse(res.body.items[0].articles)[0];
+            assert.deepEqual(article.views, 2000);
         });
     });
 });
