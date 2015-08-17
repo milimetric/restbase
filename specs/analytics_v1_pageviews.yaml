@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
   version: '1.0.0-beta'
-  title: MediaWiki Analytics API
-  description: Basic MediaWiki Analytics api.
+  title: Analytics Pageviews API
+  description: Analytics Pageviews API.
   termsofservice: https://github.com/wikimedia/restbase#restbase
   contact:
     name: Analytics
@@ -14,6 +14,27 @@ info:
 x-default-params:
   domain: analytics.wikimedia.org
 paths:
+  /{module:pageviews}/:
+    get:
+      tags:
+        - Pageviews data
+      description: >
+        List pageviews data sub-apis.
+
+        Stability: [unstable](https://www.mediawiki.org/wiki/API_versioning#Stable)
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: The queriable sub-items
+          schema:
+            $ref: '#/definitions/listing'
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/problem'
+      x-monitor: false
+
   /{module:pageviews}/per-article/{project}/{agent}/{article}/{granularity}/{start}/{end}:
     get:
       tags:
@@ -64,10 +85,11 @@ paths:
           description: Error
           schema:
             $ref: '#/definitions/problem'
+      x-backend-request:
+        uri: /{domain}/sys/pageviews/per-article/{project}/{agent}/{article}/{granularity}/{start}/{end}
       x-monitor: false
 
-
-/{module:pageviews}/per-project/{project}/{agent}/{granularity}/{start}/{end}:
+  /{module:pageviews}/per-project/{project}/{agent}/{granularity}/{start}/{end}:
     get:
       tags:
         - Pageviews data
@@ -112,6 +134,8 @@ paths:
           description: Error
           schema:
             $ref: '#/definitions/problem'
+      x-backend-request:
+        uri: /{domain}/sys/pageviews/per-project/{project}/{agent}/{granularity}/{start}/{end}
       x-monitor: false
 
   /{module:pageviews}/top/{project}/{timespan}:
@@ -139,11 +163,13 @@ paths:
         '200':
           description: The list of top articles in the project
           schema:
-            $ref: '#/definitions/top-articles'
+            $ref: '#/definitions/tops'
         default:
           description: Error
           schema:
             $ref: '#/definitions/problem'
+      x-backend-request:
+        uri: /{domain}/sys/pageviews/top/{project}/{timespan}
       x-monitor: false
 
 
@@ -161,6 +187,16 @@ definitions:
         type: string
       instance:
         type: string
+
+  listing:
+    description: The result format for listings
+    required:
+      - items
+    properties:
+      items:
+        type: array
+        items:
+          type: string
 
   article:
     required:
@@ -204,7 +240,7 @@ definitions:
             type: integer
             format: int64
 
-  top-articles:
+  tops:
     required:
       - items
     properties:

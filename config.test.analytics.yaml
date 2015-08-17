@@ -1,4 +1,4 @@
-# RESTBase config
+# RESTBase config for Analytics APIs
 
 info:
   name: restbase
@@ -11,7 +11,7 @@ templates:
     # swagger options, overriding the shared ones from the merged specs (?)
     info:
       version: 1.0.0-beta
-      title: Wikimedia REST API
+      title: Wikimedia Analytics Pageviews REST API
       description: >
           This API aims to provide coherent and low-latency access to
           Wikimedia content and services. It is currently in beta testing, so
@@ -40,9 +40,8 @@ templates:
       - mediaWikiAuth:
         - user:read
     x-subspecs:
-      - mediawiki/v1/content
-      - mediawiki_v1_graphoid
-      - test
+      - analytics_v1_pageviews
+      - test_analytics
 
   wmf-sys-1.0.0: &wp/sys/1.0.0
     info: 
@@ -72,76 +71,11 @@ templates:
                   - name: default.group.local
                     domains: /./
 
-      /{module:page_revisions}:
+      /{module:pageviews}:
         x-modules:
-            - name: page_revisions
+            - name: pageviews
               version: 1.0.0
               type: file
-
-      /{module:key_value}:
-        x-modules:
-          - name: key_value
-            version: 1.0.0
-            type: file
-
-      /{module:key_rev_value}:
-        x-modules:
-          - name: key_rev_value
-            version: 1.0.0
-            type: file
-
-      /{module:parsoid}:
-        x-modules:
-          - name: parsoid
-            version: 1.0.0
-            type: file
-            options:
-              parsoidHost: http://parsoid-lb.eqiad.wikimedia.org
-              # For local testing, use:
-              # parsoidHost: http://localhost:8000
-
-      /{module:graphoid}:
-        x-modules:
-          - name: simple_service
-            version: 1.0.0
-            type: file
-            options:
-              paths:
-                /v1/png/{title}/{revision}/{graph_id}:
-                  get:
-                    backend_request:
-                      uri: http://graphoid.wikimedia.org/en.wikipedia.org/v1/png/{title}/{revision}/{graph_id}
-
-      /{module:action}:
-        x-modules:
-          - name: action
-            type: file
-            options:
-              apiURI: http://en.wikipedia.org/w/api.php
-
-      /{module:testservice}:
-        x-modules:
-          - name: simple_service
-            version: 1.0.0
-            type: file
-            options:
-              paths:
-                /test/{key}:
-                  get:
-                    backend_request:
-                      uri: http://en.wikipedia.org/wiki/{+key}
-                    storage: 
-                      no-cache_refresh: true
-                      bucket_request: 
-                        uri: /{domain}/sys/key_value/testservice.test
-                      item_request:
-                        uri: /{domain}/sys/key_value/testservice.test/{key}
-
-
-      /{module:page_save}:
-        x-modules:
-          - name: page_save
-            type: file
 
   wp-default-1.0.0: &wp/default/1.0.0
     x-subspecs:
@@ -173,7 +107,6 @@ services:
 test:
   content_types:
     html: text/html;profile=mediawiki.org/specs/html/1.1.0;charset=utf-8
-    data-parsoid: application/json;profile=mediawiki.org/specs/data-parsoid/0.0.1;charset=utf-8
     wikitext: text/plain;profile=mediawiki.org/specs/wikitext/1.0.0;charset=utf-8
 
 logging:

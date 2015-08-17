@@ -77,22 +77,6 @@ paths:
         body: '{$.request.body}'
       x-monitor: false
 
-  /{module:pageviews}/per-article/{project}/{agent}/{article}/{granularity}/{start}/{end}:
-        get:
-            x-backend-request:
-                uri: /{domain}/sys/pageviews/per-article/{project}/{agent}/{article}/{granularity}/{start}/{end}
-            x-monitor: false
-  /{module:pageviews}/per-project/{project}/{agent}/{granularity}/{start}/{end}:
-    get:
-      x-backend-request:
-        uri: /{domain}/sys/pageviews/per-project/{project}/{agent}/{granularity}/{start}/{end}
-      x-monitor: false
-  /{module:pageviews}/top/{project}/{timespan}:
-    get:
-      x-backend-request:
-        uri: /{domain}/sys/pageviews/top/{project}/{timespan}
-      x-monitor: false
-
   # These three endpoints are just for fake data:
   /{module:pageviews}/insert-per-article/{project}/{agent}/{article}/{granularity}/{timestamp}/{views}:
     get:
