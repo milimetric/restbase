@@ -42,6 +42,8 @@ templates:
     x-subspecs:
       - mediawiki/v1/content
       - mediawiki_v1_graphoid
+      - analytics_v1_pageviews
+      - test_analytics
       - test
 
   wmf-sys-1.0.0: &wp/sys/1.0.0
@@ -142,6 +144,12 @@ templates:
         x-modules:
           - name: page_save
             type: file
+
+      /{module:pageviews}:
+        x-modules:
+            - name: pageviews
+              version: 1.0.0
+              type: file
 
   wp-default-1.0.0: &wp/default/1.0.0
     x-subspecs:

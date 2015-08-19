@@ -14,14 +14,14 @@ describe('pageviews endpoints', function () {
     //Start server before running tests
     before(function () { return server.start(); });
 
-    var articleEndpoint = '/pageviews/per-article/en.wikipedia/spider/one/daily/2015070100/2015070300';
-    var projectEndpoint = '/pageviews/per-project/en.wikipedia/spider/hourly/2015070100/2015070102';
-    var topsEndpoint = '/pageviews/top/en.wikipedia/month';
+    var articleEndpoint = '/pageviews/per-article/en.wikipedia/desktop/spider/one/daily/2015070100/2015070300';
+    var projectEndpoint = '/pageviews/per-project/en.wikipedia/mobile-app/spider/hourly/2015070100/2015070102';
+    var topsEndpoint = '/pageviews/top/en.wikipedia/mobile-web/month';
 
     // Fake data insertion endpoints
-    var insertArticleEndpoint = '/pageviews/insert-per-article/en.wikipedia/spider/one/daily/2015070200';
-    var insertProjectEndpoint = '/pageviews/insert-per-project/en.wikipedia/spider/hourly/2015070101';
-    var insertTopsEndpoint = '/pageviews/insert-top/en.wikipedia/month/1/one';
+    var insertArticleEndpoint = '/pageviews/insert-per-article/en.wikipedia/desktop/spider/one/daily/2015070200';
+    var insertProjectEndpoint = '/pageviews/insert-per-project/en.wikipedia/mobile-app/spider/hourly/2015070101';
+    var insertTopsEndpoint = '/pageviews/insert-top/en.wikipedia/mobile-web/month/1/one';
 
     // Test Article Endpoint
 

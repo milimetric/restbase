@@ -76,20 +76,3 @@ paths:
         uri: /{domain}/sys/page_save/wikitext/{title}
         body: '{$.request.body}'
       x-monitor: false
-
-  # These three endpoints are just for fake data:
-  /{module:pageviews}/insert-per-article/{project}/{agent}/{article}/{granularity}/{timestamp}/{views}:
-    get:
-      x-backend-request:
-        uri: /{domain}/sys/pageviews/insert-per-article/{project}/{agent}/{article}/{granularity}/{timestamp}/{views}
-      x-monitor: false
-  /{module:pageviews}/insert-per-project/{project}/{agent}/{granularity}/{timestamp}/{views}:
-    get:
-      x-backend-request:
-        uri: /{domain}/sys/pageviews/insert-per-project/{project}/{agent}/{granularity}/{timestamp}/{views}
-      x-monitor: false
-  /{module:pageviews}/insert-top/{project}/{timespan}/{rank}/{article}/{views}:
-    get:
-      x-backend-request:
-        uri: /{domain}/sys/pageviews/insert-top/{project}/{timespan}/{rank}/{article}/{views}
-      x-monitor: false

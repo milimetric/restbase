@@ -35,7 +35,7 @@ paths:
             $ref: '#/definitions/problem'
       x-monitor: false
 
-  /{module:pageviews}/per-article/{project}/{agent}/{article}/{granularity}/{start}/{end}:
+  /{module:pageviews}/per-article/{project}/{access}/{agent}/{article}/{granularity}/{start}/{end}:
     get:
       tags:
         - Pageviews data
@@ -51,9 +51,14 @@ paths:
           description: Name of the project
           type: string
           required: true
+        - name: access
+          in: path
+          description: Type of access method [all-access|desktop|mobile-app|mobile-web]
+          type: string
+          required: true
         - name: agent
           in: path
-          description: Type of user agent [user|spider]
+          description: Type of user agent [all-agents|user|spider]
           type: string
           required: true
         - name: article
@@ -86,10 +91,10 @@ paths:
           schema:
             $ref: '#/definitions/problem'
       x-backend-request:
-        uri: /{domain}/sys/pageviews/per-article/{project}/{agent}/{article}/{granularity}/{start}/{end}
+        uri: /{domain}/sys/pageviews/per-article/{project}/{access}/{agent}/{article}/{granularity}/{start}/{end}
       x-monitor: false
 
-  /{module:pageviews}/per-project/{project}/{agent}/{granularity}/{start}/{end}:
+  /{module:pageviews}/per-project/{project}/{access}/{agent}/{granularity}/{start}/{end}:
     get:
       tags:
         - Pageviews data
@@ -102,12 +107,17 @@ paths:
       parameters:
         - name: project
           in: path
-          description: Name of the project
+          description: Name of the project [all-projects|project-name]
+          type: string
+          required: true
+        - name: access
+          in: path
+          description: Type of access method [all-access|desktop|mobile-app|mobile-web]
           type: string
           required: true
         - name: agent
           in: path
-          description: Type of user agent [user|spider]
+          description: Type of user agent [all-agents|user|spider]
           type: string
           required: true
         - name: granularity
@@ -135,10 +145,10 @@ paths:
           schema:
             $ref: '#/definitions/problem'
       x-backend-request:
-        uri: /{domain}/sys/pageviews/per-project/{project}/{agent}/{granularity}/{start}/{end}
+        uri: /{domain}/sys/pageviews/per-project/{project}/{access}/{agent}/{granularity}/{start}/{end}
       x-monitor: false
 
-  /{module:pageviews}/top/{project}/{timespan}:
+  /{module:pageviews}/top/{project}/{access}/{timespan}:
     get:
       tags:
         - Pageviews data
@@ -151,7 +161,12 @@ paths:
       parameters:
         - name: project
           in: path
-          description: Name of the project
+          description: Name of the project [all-projects|project-name]
+          type: string
+          required: true
+        - name: access
+          in: path
+          description: Type of access method [all-access|desktop|mobile-app|mobile-web]
           type: string
           required: true
         - name: timespan
@@ -169,7 +184,7 @@ paths:
           schema:
             $ref: '#/definitions/problem'
       x-backend-request:
-        uri: /{domain}/sys/pageviews/top/{project}/{timespan}
+        uri: /{domain}/sys/pageviews/top/{project}/{access}/{timespan}
       x-monitor: false
 
 
@@ -207,6 +222,8 @@ definitions:
         properties:
           project:
             type : string
+          access:
+            type : string
           article:
             type: string
           agent:
@@ -229,6 +246,8 @@ definitions:
         properties:
           project:
             type : string
+          access:
+            type : string
           agent:
             type: string
           granularity:
@@ -249,6 +268,8 @@ definitions:
         properties:
           project:
             type: string
+          access:
+            type : string
           timespan:
             type: string
           articles:

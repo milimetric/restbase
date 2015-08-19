@@ -39,6 +39,7 @@ var tables = {
             attributes: {
                 project     : 'string',
                 article     : 'string',
+                access      : 'string',
                 agent       : 'string',
                 granularity : 'string',
                 // the hourly timestamp will be stored as YYYYMMDDHH
@@ -48,6 +49,7 @@ var tables = {
             index: [
                 { attribute: 'project', type: 'hash' },
                 { attribute: 'article', type: 'hash' },
+                { attribute: 'access', type: 'hash' },
                 { attribute: 'agent', type: 'hash' },
                 { attribute: 'granularity', type: 'hash' },
                 { attribute: 'timestamp', type: 'range', order: 'asc' },
@@ -58,6 +60,7 @@ var tables = {
             version: 1,
             attributes: {
                 project     : 'string',
+                access      : 'string',
                 agent       : 'string',
                 granularity : 'string',
                 // the hourly timestamp will be stored as YYYYMMDDHH
@@ -66,6 +69,7 @@ var tables = {
             },
             index: [
                 { attribute: 'project', type: 'hash' },
+                { attribute: 'access', type: 'hash' },
                 { attribute: 'agent', type: 'hash' },
                 { attribute: 'granularity', type: 'hash' },
                 { attribute: 'timestamp', type: 'range', order: 'asc' },
@@ -75,13 +79,15 @@ var tables = {
             table: tables.tops,
             version: 1,
             attributes: {
-                project     : 'string',
-                timespan    : 'string',
+                project  : 'string',
+                access   : 'string',
+                timespan : 'string',
                 // format for this is a json array: [{rank: 1, article: <<title>>, views: 123}, ...]
-                articles    : 'string'
+                articles : 'string'
             },
             index: [
                 { attribute: 'project', type: 'hash' },
+                { attribute: 'access', type: 'hash' },
                 { attribute: 'timespan', type: 'hash' },
             ]
         }
@@ -113,6 +119,7 @@ PJVS.prototype.pageviewsForArticle = function (restbase, req) {
             table: tables.article,
             attributes: {
                 project: rp.project,
+                access: rp.access,
                 agent: rp.agent,
                 article: rp.article,
                 granularity: rp.granularity,
@@ -135,6 +142,7 @@ PJVS.prototype.pageviewsForProjects = function (restbase, req) {
             table: tables.project,
             attributes: {
                 project: rp.project,
+                access: rp.access,
                 agent: rp.agent,
                 granularity: rp.granularity,
                 timestamp: { between: [rp.start, rp.end] },
@@ -156,6 +164,7 @@ PJVS.prototype.pageviewsForTops = function (restbase, req) {
             table: tables.tops,
             attributes: {
                 project: rp.project,
+                access: rp.access,
                 timespan: rp.timespan,
             }
         }
@@ -180,6 +189,7 @@ PJVS.prototype.insertPageviewsForArticleTestData = function(restbase, req) {
                 project: rp.project,
                 article: rp.article,
                 granularity: rp.granularity,
+                access: rp.access,
                 agent: rp.agent,
                 timestamp: rp.timestamp,
                 views: rp.views,
@@ -202,6 +212,7 @@ PJVS.prototype.insertPageviewsForProjectTestData = function(restbase, req) {
             attributes: {
                 project: rp.project,
                 granularity: rp.granularity,
+                access: rp.access,
                 agent: rp.agent,
                 timestamp: rp.timestamp,
                 views: rp.views,
@@ -224,6 +235,7 @@ PJVS.prototype.insertPageviewsForTopsTestData = function(restbase, req) {
             table: tables.tops,
             attributes: {
                 project: rp.project,
+                access: rp.access,
                 timespan: rp.timespan,
                 articles: JSON.stringify([
                     {rank: rp.rank, article: rp.article + rp.timespan, views: rp.views},
