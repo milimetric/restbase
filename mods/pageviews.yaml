@@ -7,7 +7,7 @@ paths:
         get:
           summary: query pageviews per project
           operationId: pageviewsForProjects
-    /top/{project}/{access}/{timespan}:
+    /top/{project}/{access}/{year}/{month}/{day}:
         get:
           summary: query top pageviews
           operationId: pageviewsForTops
@@ -21,7 +21,7 @@ paths:
         get:
           summary: insert pageviews test data for per project queries
           operationId: insertPageviewsForProjectTestData
-    /insert-top/{project}/{access}/{timespan}/{rank}/{article}/{views}:
+    /insert-top/{project}/{access}/{year}/{month}/{day}/{rank}/{article}/{views}:
         get:
           summary: insert pageviews test data for tops queries
           operationId: insertPageviewsForTopsTestData

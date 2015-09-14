@@ -148,7 +148,7 @@ paths:
         uri: /{domain}/sys/pageviews/per-project/{project}/{access}/{agent}/{granularity}/{start}/{end}
       x-monitor: false
 
-  /{module:pageviews}/top/{project}/{access}/{timespan}:
+  /{module:pageviews}/top/{project}/{access}/{year}/{month}/{day}:
     get:
       tags:
         - Pageviews data
@@ -169,9 +169,19 @@ paths:
           description: Type of access method [all-access|desktop|mobile-app|mobile-web]
           type: string
           required: true
-        - name: timespan
+        - name: year
           in: path
-          description: Timespan for which to get top articles [year|month|day]
+          description: The year for which to retrieve top articles [all-years|year]
+          type: string
+          required: true
+        - name: month
+          in: path
+          description: The month for which to retrieve top articles [all-months|month]
+          type: string
+          required: true
+        - name: day
+          in: path
+          description: The day for which to retrieve top articles [all-days|day]
           type: string
           required: true
       responses:
@@ -184,7 +194,7 @@ paths:
           schema:
             $ref: '#/definitions/problem'
       x-backend-request:
-        uri: /{domain}/sys/pageviews/top/{project}/{access}/{timespan}
+        uri: /{domain}/sys/pageviews/top/{project}/{access}/{year}/{month}/{day}
       x-monitor: false
 
 
@@ -270,7 +280,11 @@ definitions:
             type: string
           access:
             type : string
-          timespan:
+          year:
+            type: string
+          month:
+            type: string
+          day:
             type: string
           articles:
             # format for this is a json array: [{rank: 1, article: <<title>>, views: 123}, ...]

@@ -16,12 +16,12 @@ describe('pageviews endpoints', function () {
 
     var articleEndpoint = '/pageviews/per-article/en.wikipedia/desktop/spider/one/daily/2015070100/2015070300';
     var projectEndpoint = '/pageviews/per-project/en.wikipedia/mobile-app/spider/hourly/2015070100/2015070102';
-    var topsEndpoint = '/pageviews/top/en.wikipedia/mobile-web/month';
+    var topsEndpoint = '/pageviews/top/en.wikipedia/mobile-web/2015/all-months/30';
 
     // Fake data insertion endpoints
     var insertArticleEndpoint = '/pageviews/insert-per-article/en.wikipedia/desktop/spider/one/daily/2015070200';
     var insertProjectEndpoint = '/pageviews/insert-per-project/en.wikipedia/mobile-app/spider/hourly/2015070101';
-    var insertTopsEndpoint = '/pageviews/insert-top/en.wikipedia/mobile-web/month/1/one';
+    var insertTopsEndpoint = '/pageviews/insert-top/en.wikipedia/mobile-web/2015/all-months/all-days/1/one';
 
     // Test Article Endpoint
 

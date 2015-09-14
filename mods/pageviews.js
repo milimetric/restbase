@@ -81,14 +81,18 @@ var tables = {
             attributes: {
                 project  : 'string',
                 access   : 'string',
-                timespan : 'string',
+                year     : 'string',
+                month    : 'string',
+                day      : 'string',
                 // format for this is a json array: [{rank: 1, article: <<title>>, views: 123}, ...]
                 articles : 'string'
             },
             index: [
                 { attribute: 'project', type: 'hash' },
                 { attribute: 'access', type: 'hash' },
-                { attribute: 'timespan', type: 'hash' },
+                { attribute: 'year', type: 'hash' },
+                { attribute: 'month', type: 'hash' },
+                { attribute: 'day', type: 'hash' },
             ]
         }
     };
@@ -158,6 +162,13 @@ PJVS.prototype.pageviewsForTops = function (restbase, req) {
     var rp = req.params,
         dataRequest;
 
+    if (rp.year === 'all-years') {
+        rp.month = 'all-months';
+    }
+    if (rp.month === 'all-months') {
+        rp.day = 'all-days';
+    }
+
     dataRequest = restbase.get({
         uri: tableURI(rp.domain, tables.tops),
         body: {
@@ -165,7 +176,9 @@ PJVS.prototype.pageviewsForTops = function (restbase, req) {
             attributes: {
                 project: rp.project,
                 access: rp.access,
-                timespan: rp.timespan,
+                year: rp.year,
+                month: rp.month,
+                day: rp.day
             }
         }
 
@@ -236,7 +249,9 @@ PJVS.prototype.insertPageviewsForTopsTestData = function(restbase, req) {
             attributes: {
                 project: rp.project,
                 access: rp.access,
-                timespan: rp.timespan,
+                year: rp.year,
+                month: rp.month,
+                day: rp.day,
                 articles: JSON.stringify([
                     {rank: rp.rank, article: rp.article + rp.timespan, views: rp.views},
                 ]),
